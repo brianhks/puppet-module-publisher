@@ -4,5 +4,6 @@ command -v librarian-puppet >/dev/null 2>&1 || { echo -e >&2 "librarian-puppet i
 NEXUS_URL=http://localhost:8081
 NEXUS_USER=admin
 NEXUS_PASSWORD=admin123
+NEXUS_REPOSITORY=puppet
 
 
