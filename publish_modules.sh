@@ -1,10 +1,17 @@
-. ./common.sh
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+. $SCRIPT_DIR/common.sh
 
 #Nexus rest api taken from 
 #https://support.sonatype.com/entries/22189106-How-can-I-programatically-upload-an-artifact-into-Nexus-
 
-#List and parse module versions
-MODULES=`librarian-puppet show`
+if [ -z "$1" ]; then
+	#List and parse module versions
+	MODULES=`librarian-puppet show`
+else
+	MODULES=$1
+fi
+
 
 #Verify each module has a metadata.json
 while read -r line; do
@@ -45,7 +52,7 @@ while read -r line; do
 	version=`echo $line | cut -d ' ' -f 2 | tail -c +2 | head -c -2`
 	archive_name="$module-$version.tar.gz"
 	
-	curl -v -u $NEXUS_USER:$NEXUS_PASSWORD --upload-file modules/$archive_name  $NEXUS_URL/nexus/content/repositories/$NEXUS_REPOSITORY/$group/$module/$version/$module-$version.tar.gz
-	curl -v -u $NEXUS_USER:$NEXUS_PASSWORD --upload-file modules/$archive_name.md5  $NEXUS_URL/nexus/content/repositories/$NEXUS_REPOSITORY/$group/$module/$version/$module-$version.tar.gz.md5
-	curl -v -u $NEXUS_USER:$NEXUS_PASSWORD --upload-file modules/$archive_name.sha1  $NEXUS_URL/nexus/content/repositories/$NEXUS_REPOSITORY/$group/$module/$version/$module-$version.tar.gz.sha1
+	curl -u $NEXUS_USER:$NEXUS_PASSWORD --upload-file modules/$archive_name  $NEXUS_URL/nexus/content/repositories/$NEXUS_REPOSITORY/$group/$module/$version/$module-$version.tar.gz
+	curl -u $NEXUS_USER:$NEXUS_PASSWORD --upload-file modules/$archive_name.md5  $NEXUS_URL/nexus/content/repositories/$NEXUS_REPOSITORY/$group/$module/$version/$module-$version.tar.gz.md5
+	curl -u $NEXUS_USER:$NEXUS_PASSWORD --upload-file modules/$archive_name.sha1  $NEXUS_URL/nexus/content/repositories/$NEXUS_REPOSITORY/$group/$module/$version/$module-$version.tar.gz.sha1
 done <<< "$MODULES"
