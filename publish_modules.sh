@@ -5,6 +5,9 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 #Nexus rest api taken from 
 #https://support.sonatype.com/entries/22189106-How-can-I-programatically-upload-an-artifact-into-Nexus-
 
+#If passing as a parameter do so like this
+#publish_modules.sh "echoes-wrappers (0.8.0)"
+
 if [ -z "$1" ]; then
 	#List and parse module versions
 	MODULES=`librarian-puppet show`
